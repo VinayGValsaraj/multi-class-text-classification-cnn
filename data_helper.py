@@ -25,22 +25,33 @@ def clean_str(s):
 
 def load_data_and_labels(filename):
 	"""Load sentences and labels"""
-	df = pd.read_csv(filename, compression='zip', dtype={'consumer_complaint_narrative': object})
-	selected = ['product', 'consumer_complaint_narrative']
-	non_selected = list(set(df.columns) - set(selected))
+	df = pd.read_csv(filename, sep="|", encoding="unicode_escape")
+	df.columns = ['label', 'text']
+	# labels = [str(i) for i in range(15)]
+	# print (df['label'])
+	labels = sorted(list(set(df['label'].tolist())))
+	labels = [str(i) for i in labels]
 
-	df = df.drop(non_selected, axis=1) # Drop non selected columns
-	df = df.dropna(axis=0, how='any', subset=selected) # Drop null rows
+	# selected = ['product', 'consumer_complaint_narrative']
+	# non_selected = list(set(df.columns) - set(selected))
+
+	# df = df.drop(non_selected, axis=1) # Drop non selected columns
+	# df = df.dropna(axis=0, how='any', subset=selected) # Drop null rows
 	df = df.reindex(np.random.permutation(df.index)) # Shuffle the dataframe
 
 	# Map the actual labels to one hot labels
-	labels = sorted(list(set(df[selected[0]].tolist())))
+	# labels = sorted(list(set(df[selected[0]].tolist())))
 	one_hot = np.zeros((len(labels), len(labels)), int)
 	np.fill_diagonal(one_hot, 1)
 	label_dict = dict(zip(labels, one_hot))
 
-	x_raw = df[selected[1]].apply(lambda x: clean_str(x)).tolist()
-	y_raw = df[selected[0]].apply(lambda y: label_dict[y]).tolist()
+	x_raw = df['text'].apply(lambda x: str(x)).tolist()
+	# x_raw = df[selected[1]].apply(lambda x: clean_str(x)).tolist()
+	y_raw = df['label'].apply(lambda y: label_dict[str(y)]).tolist()
+	# print ("X_RAW ", x_raw)
+	# print ("Y_RAW ", y_raw)
+	# print (df)
+	# print (labels)
 	return x_raw, y_raw, df, labels
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):

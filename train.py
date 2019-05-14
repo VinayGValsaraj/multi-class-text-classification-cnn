@@ -16,7 +16,6 @@ def train_cnn():
 	"""Step 0: load sentences, labels, and training parameters"""
 	train_file = sys.argv[1]
 	x_raw, y_raw, df, labels = data_helper.load_data_and_labels(train_file)
-
 	parameter_file = sys.argv[2]
 	params = json.loads(open(parameter_file).read())
 
@@ -133,4 +132,6 @@ def train_cnn():
 
 if __name__ == '__main__':
 	# python3 train.py ./data/consumer_complaints.csv.zip ./parameters.json
+	# python3 predict.py ./trained_model_1557303899/ ./data/dev_15_dns.csv
 	train_cnn()
+
