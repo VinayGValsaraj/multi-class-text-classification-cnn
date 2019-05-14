@@ -92,6 +92,7 @@ def predict_unseen_data():
 
 if __name__ == '__main__':
 	# python3 predict.py ./trained_model_1478649295/ ./data/small_samples.json
+	sys.argv[2] = "./data/dev_" + sys.argv[2]
 	predict_unseen_data()
 	sys.argv[2] = sys.argv[2].replace("dev", "test")
 	predict_unseen_data()

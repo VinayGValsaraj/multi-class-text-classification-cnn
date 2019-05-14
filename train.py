@@ -11,12 +11,14 @@ from tensorflow.contrib import learn
 from sklearn.model_selection import train_test_split
 
 logging.getLogger().setLevel(logging.INFO)
+tf.logging.set_verbosity(tf.logging.INFO)
+
 
 def train_cnn():
 	"""Step 0: load sentences, labels, and training parameters"""
-	train_file = sys.argv[1]
+	train_file = "./data/train_" + sys.argv[1]
 	x_raw, y_raw, df, labels = data_helper.load_data_and_labels(train_file)
-	parameter_file = sys.argv[2]
+	parameter_file = "./parameters.json"
 	params = json.loads(open(parameter_file).read())
 
 	"""Step 1: pad each sentence to the same length and map each word to an id"""
